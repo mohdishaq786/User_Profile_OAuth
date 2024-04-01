@@ -4,7 +4,7 @@ info:
   description: API documentation for User profile API.
   version: "1.0"
 servers:
-  - url: https://User_Profile_OAuth.onrender.com/api
+  - url: https://User-Profile-OAuth.onrender.com/api
     description: Production server
   - url: http://localhost:5000/api
     description: Development server
