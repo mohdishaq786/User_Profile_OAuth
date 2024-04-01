@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: User Profile Api
+  description: API documentation for User profile API.
+  version: "1.0"
+servers:
+  - url: http://localhost:5000/api
+    description: Development server
+  - url: https://user-profile-oauth.onrender.com/api
+    description: Production server
+paths:
+  /user/v1/register:
+    post:
+      summary: Register user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+                photoUrl:
+                  type: string
+                isProfilePublic:
+                  type: boolean
+      responses:
+        "200":
+          description: Successfully registered user
+  /user/v1/login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful login
+  /profiles/v1/profile:
+    get:
+      summary: Get own profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successful profile retrieval
+        "401":
+          description: Unauthorized
+  /profiles/v1/profile/visibility:
+    put:
+      summary: Update profile visibility
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+                photoUrl:
+                  type: string
+                isProfilePublic:
+                  type: boolean
+      responses:
+        "200":
+          description: Successfully updated profile visibility
+        "401":
+          description: Unauthorized
+  /user/v1/user/{userId}:
+    get:
+      summary: Get user profile by admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful retrieval of user profile
+        "401":
+          description: Unauthorized
+  /public-profile/v1/public-profile/{userId}:
+    get:
+      summary: Get public user profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful retrieval of public user profile
+        "401":
+          description: Unauthorized
+
+  /user/v1/logout:
+    post:
+      summary: Logout user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Successfully logged out
+  /user/v1/auth/google:
+    get:
+      summary: Initiating Google OAuth
+      description: |
+        Redirects to Google's OAuth service for authentication. Swagger UI does not fully support OAuth redirections for authentication; therefore, please manually initiate the OAuth flow by pasting the appropriate URL into your browser's address bar.
+
+        - For local development mode, use: [http://localhost:5000/api/user/v1/auth/google](http://localhost:5000/api/user/v1/auth/google)
+        - For production mode, use: [https://user-profile-oauth.onrender.com/api/user/v1/auth/google](https://user-profile-oauth.onrender.com/api/user/v1/auth/google)
+
+        This process will authenticate your session for further API operations that require a signed-in user.
+      responses:
+        "302":
+          description: Redirect to Google's OAuth service.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
